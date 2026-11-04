@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>نظام إدارة الطلاب</title>
+</head>
+<body>
+<h1> نظام إدارة الطلاب  </h1>
+
+<script>
+// 1- الكلاس
+class Student {
+  constructor(id, name, grades, attendance) {
+    this.id = id; this.name = name; this.grades = grades; this.attendance = attendance;
+  }
+  getAverage(){ return this.grades.reduce((a,b)=>a+b,0)/this.grades.length; }
+  getGrade(){
+    const av=this.getAverage();
+    if(av>=90) return 'A';
+    else if(av>=80) return 'B';
+    else if(av>=70) return 'C';
+    else if(av>=60) return 'D';
+    else if(av>=50) return 'E';
+    else return 'F';
+  }
+  getFinalResult(){
+    if(this.getAverage()>=50 && this.attendance>=75) return 'ناجح';
+    else return 'يحتاج مراجعة';
+  }
+}
+
+const studentsList=[
+  new Student(1,'hanan',[88,92,85],96),
+  new Student(2,'mohamed',[75,68,72],80),
+  new Student(3,'asmaa',[45,42,48],88),
+  new Student(4,'gody',[40,44,41],90),
+];
+
+console.log('===== تقرير جميع الطلاب =====');
+studentsList.forEach(s=>{
+  console.log(`ID: ${s.id} | ${s.name} | متوسط: ${s.getAverage().toFixed(2)} | تقدير: ${s.getGrade()} | نتيجة: ${s.getFinalResult()}`);
+});
+
+const failedStudents=studentsList.filter(s=>{ const a=s.getAverage(); return a>=40 && a<=49; });
+console.log('\n===== المتعثرون (40-49) =====', failedStudents.map(s=>s.name));
+
+const afterRafa=failedStudents.map(s=>{
+  const ng=s.grades.map(g=>g+5);
+  return new Student(s.id,s.name,ng,s.attendance);
+});
+
+const totalNewAvg=afterRafa.reduce((acc,s)=>acc+s.getAverage(),0);
+
+console.log('\n===== بعد الرأفة =====');
+afterRafa.forEach(s=>{
+  console.log(`${s.name} | جديد: ${s.getAverage().toFixed(2)} | ${s.getFinalResult()}`);
+});
+
+let finalAvg;
+if(afterRafa.length===0){ finalAvg=0; console.log('درع الحماية: لا يوجد متعثرون'); }
+else{ finalAvg=totalNewAvg/afterRafa.length; }
+console.log(`\nمتوسط المتعثرين بعد التعديل: ${finalAvg.toFixed(2)}`);
+</script>
+</body>
+</html>
